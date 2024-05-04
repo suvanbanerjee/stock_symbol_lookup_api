@@ -8,7 +8,8 @@ app = FastAPI()
 
 @app.get("/{company_name}")
 def read_item(company_name: str):
-    pattern = re.compile(r"\b([A-Z]{1,5}\.?\-?[A-Z]{1,3})\((NASDAQ|NYSE)\)")
+    pattern = re.compile(r"\b([A-Z]{1,5}\.?\-?[A-Z]{1,3}):?\(?(NASDAQ|NYSE)\)?")
+    fall_back_pattern = re.compile(r"\(([A-Z]{1,5})\)")
 
     url = "https://www.google.com/search?q=" + "symbol of " + company_name + " stock"
     html = requests.get(url).content
@@ -23,4 +24,11 @@ def read_item(company_name: str):
         print(result)
         return {"stock_symbol": result}
     else:
-        return {"stock_symbol": "Not found"}
+        result = fall_back_pattern.search(stock_symbol)
+        if result:
+            result = result.group(1)
+            print(result)
+            return {"stock_symbol": result}
+        else:
+            print("Not found")
+            return {"stock_symbol": "Not found"}
