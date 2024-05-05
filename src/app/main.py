@@ -1,10 +1,28 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, status, HTTPException
 import requests
 from bs4 import BeautifulSoup
 import re
 
-app = FastAPI()
+app = FastAPI(
+    title="Stock ticker symbol API",
+    description="This API returns the stock ticker symbol of a company given its name. It works for companies listed on NASDAQ and NYSE.",
+    version="1.0",
+    contact={
+        "name": "@suvanbanerjee",
+        "url": "https://github.com/suvanbanerjee/stock_symbol_lookup_api"
+    },
+    license_info={
+        "name": "Apache 2.0",
+        "url": "https://github.com/suvanbanerjee/stock_symbol_lookup_api/blob/main/LICENSE"
+    }
+)
 
+@app.get("/", status_code=status.HTTP_404_NOT_FOUND, summary="Root")
+def read_root() -> None:
+    """
+    Root request
+    """
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
 @app.get("/{company_name}")
 def read_item(company_name: str):
@@ -27,8 +45,9 @@ def read_item(company_name: str):
         result = fall_back_pattern.search(stock_symbol)
         if result:
             result = result.group(1)
-            print(result)
             return {"stock_symbol": result}
         else:
-            print("Not found")
-            return {"stock_symbol": "Not found"}
+            raise HTTPException(
+            status_code=404,
+            detail="Ticker not found"
+        )
