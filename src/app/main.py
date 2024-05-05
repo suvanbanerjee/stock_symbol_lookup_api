@@ -19,12 +19,12 @@ app = FastAPI(
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'}
 
-@app.get("/", status_code=status.HTTP_404_NOT_FOUND, summary="Root")
+@app.get("/")
 def read_root() -> None:
     """
     Root request
     """
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    return {"message": "Welcome to the Stock ticker symbol API. Please enter the company name in the URL to get the stock ticker symbol."}
 
 @app.get("/{company_name}")
 def read_item(company_name: str):
