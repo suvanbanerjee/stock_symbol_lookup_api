@@ -38,7 +38,7 @@ def read_item(company_name: str):
     stock_symbol = soup.text
 
     result = pattern.search(stock_symbol)
-
+    return {"test_log" : stock_symbol, "company_name": company_name, "stock_symbol": result}
     if result:
         result = result.group(1)
         print(result)
