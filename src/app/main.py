@@ -17,6 +17,8 @@ app = FastAPI(
     }
 )
 
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'}
+
 @app.get("/", status_code=status.HTTP_404_NOT_FOUND, summary="Root")
 def read_root() -> None:
     """
@@ -30,7 +32,7 @@ def read_item(company_name: str):
     fall_back_pattern = re.compile(r"\(([A-Z]{1,5})\)")
 
     url = "https://www.google.com/search?q=" + "symbol of " + company_name + " stock"
-    html = requests.get(url).content
+    html = requests.get(url,headers=headers).content
 
     soup = BeautifulSoup(html, 'html.parser')
     stock_symbol = soup.text
