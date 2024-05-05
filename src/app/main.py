@@ -30,15 +30,15 @@ def read_root() -> None:
 def read_item(company_name: str):
     pattern = re.compile(r"\b([A-Z]{1,5}\.?\-?[A-Z]{1,3}):?\(?(NASDAQ|NYSE)\)?")
     fall_back_pattern = re.compile(r"\(([A-Z]{1,5})\)")
-
-    url = "https://www.google.com/search?q=" + "symbol of " + company_name + " stock"
+    company_name = company_name.replace(" ", "+")
+    url = "https://search.yahoo.com/search?p=" + "symbol+of+" + company_name + "+stock"
     html = requests.get(url,headers=headers).content
 
     soup = BeautifulSoup(html, 'html.parser')
     stock_symbol = soup.text
 
     result = pattern.search(stock_symbol)
-    return {"test_log" : stock_symbol, "company_name": company_name, "stock_symbol": result}
+    # return {"test_log" : stock_symbol, "company_name": company_name, "stock_symbol": result}
     if result:
         result = result.group(1)
         print(result)
